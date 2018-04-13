@@ -5,41 +5,89 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./node_modules/bulma/css/bulma.css">
     <script src="./node_modules/vue/dist/vue.js"></script>
-    <title>Document</title>
+    <title>RPGSlasher</title>
 </head>
 <body>
     
-    <p>Offline and Online Streamers</p>
-    <div id="app">
-        {{ message }}
-    </div>
+    <h2 class="has-text-centered">RPGSlaher</h2>
 
-    <div id="app-2">
-        <span v-bind:title="message">
-          Hover your mouse over me for a few seconds
-          to see my dynamically bound title!
-        </span>
+    <div id="app">
+            <div class="columns">
+                    <div class="column">
+                            <h3 class="has-text-centered">{{player}}</h3>
+                            <progress class="progress is-large is-success" v-bind:value="playerLife" max="100"></progress>
+                    </div>
+                    <div class="column">
+                            <h3 class="has-text-centered">{{enemy}}</h3>
+                            <progress class="progress is-large is-success" v-bind:value="enemyLife" max="100"></progress>
+                    </div>
+                  </div>
+    <div class="footer container has-text-centered">
+        <a v-if="bool" v-on:click="startGame" class="button is-success is-rounded content">Start New Game</a>
+        <div v-else="bool">
+          <a v-on:click="Attack" class="button is-danger is-rounded content">Attack</a>
+          <a v-on:click="Special" class="button is-warning is-rounded content">Special Attack</a>
+          <a v-on:click="Heal" class="button is-primary is-rounded content">Heal</a>
+          <a v-on:click="giveUp" class="button is-info is-rounded content">Give Up</a>
+        </div>
+        
+    </div>     
+
     </div>
 
     <script>
     var app = new Vue({
         el: '#app',
         data: {
-          message: 'Hello Vue!'
+          player: 'Jill',
+          enemy: 'Nemesis',
+          bool: true,
+          playerLife: '100',
+          enemyLife: '100'
+        },
+        methods:{
+          startGame : function(){
+            this.bool = false;
+            this.playerLife= '100',
+            this.enemyLife= '100'
+          },
+          Attack : function(){
+            this.enemyLife -= Math.floor(Math.random()*5);
+            this.enemyAttack();
+            this.winState();
+          },
+          enemyAttack : function () {
+            if (this.enemyLife > 0) {
+            this.playerLife -= Math.floor(Math.random()*15);
+            }
+          },
+          Special : function(){
+            this.enemyLife -= Math.floor(Math.random()*20);
+            this.enemyAttack();
+            this.winState();
+          },
+          Heal : function(){
+            this.playerLife += Math.floor(Math.random()*10);
+            this.enemyAttack();
+            this.winState();
+          },
+          giveUp : function(){
+            this.bool = true;
+          },
+          winState : function(){
+            if (this.playerLife <= 0) {
+              alert("You Lose!");
+              this.giveUp();
+            }else if (this.enemyLife <= 0) {
+              alert("You Win!");
+              this.giveUp();
+            }
+          }
         }
       })
-      </script>
-
-      <script>var app2 = new Vue({
-    el: '#app-2',
-    data: {
-      message: 'You loaded this page on ' + new Date().toLocaleString()
-    }
-  })
-  </script>
+      </script>           
             
-            
-    <footer class="footer">
+    <footer>
         <div class="container">
           <div class="content has-text-centered">
             <p>
